@@ -18,16 +18,19 @@
     <main id="" class="container">
         <section id="intro">
             <!--Add <p></p> here, with instruction for the quiz-->
+            <p>
+                Press start to play game.  Answer correctly, or lose.
+            </p>
             <button id="startbtn" class="btn btn-primary">Start</button>
         </section>
         <section id="quiz">
             <h2 id="question"> </h2>
-            <div class="d-grid gap-2">
-                <button id="answerBtn1" class="btn btn-primary"></button>
-                <button id="answerBtn2" class="btn btn-primary"></button>
-                <button id="answerBtn3" class="btn btn-primary"></button>
-                <button id="answerBtn4" class="btn btn-primary"></button>
+            <div id="buttonDiv"class="d-grid gap-2">
             </div>
+            <p id="feedback"></p>
+        </section>
+        <section>
+            <div id="timerDiv"></div>
         </section>
         <section id="summary">
             <input id="userInitials">
