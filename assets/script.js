@@ -1,14 +1,30 @@
-var qcontainer = document.getElementById("quiz")
+// Assign elements to variables.
+// var intro = document.getElementById("intro")///////////////////////////
+var questionContainer = document.getElementById("quiz")
 var summary = document.getElementById("summary")
 var startBtn = document.getElementById("startbtn")
 var question = document.getElementById("question")
 var buttonDiv = document.getElementById("buttonDiv")
 var timerDiv = document.getElementById("timerDiv")
 
-qcontainer.style.display = "none"
+//////////////////////Trying put text in dynamically/////////////////////
+
+// Create intoductory statement for the quiz.
+// Assign to `intro` variable.
+// var introParagraph = "Press start to play game.  Timer starts at 15 seconds.  Correct answers count as one point.  Incorrect answers subtract 2 seconds from timer.  Good luck!"
+// Assign the text in `introParagraph` to the intro element.
+// intro.textContent = introParagraph
+
+// Hide the question container
+questionContainer.style.display = "none"
+// Hide the summary section
 summary.style.display = "none"
+
+// Declare current question being displays as 0, which will be used as the questionsDB's index.
 var currentQuestion = 0
 
+// Create object holding the database of questions.  
+// Answers to the questions are in an array.
 var questionsDB = [
     {
         question: "What does HTML stand for?",
@@ -20,12 +36,12 @@ var questionsDB = [
         ]
     },
     {
-        question: "What does CSS stand for?",
+        question: "What does AJAX stand for?",
         answers: [
-            { answer: "Crater Station Shelter", correct: false },
-            { answer: "Cliff Shuttle Sender", correct: false },
-            { answer: "Clumsy ", correct: false },
-            { answer: "Hallway Tree Marsh Larry", correct: true }
+            { answer: "Another Jusified Atomic X-ray", correct: false },
+            { answer: "All Jars Are Xenophobic", correct: false },
+            { answer: "After Jail Armpit Xylophone", correct: false },
+            { answer: "Asynchronous JavaScript And XML", correct: true }
         ]
     },
     {
@@ -75,74 +91,118 @@ var questionsDB = [
     }
 ]
 
+// Event listener for the start button.
+// Clicking the start button will:
 startBtn.addEventListener("click", function (event) {
     event.preventDefault()
-    qcontainer.style.display = "block"
+    // Display the question container (that has a question in it).
+    questionContainer.style.display = "block"
+    // Hide the start button.
     startBtn.style.display = "none"
+    // Display a question.
     displayQuestion()
-    // When the start button is pressed, the timer starts
+    // Start countdown timer.
     countdown()
 })
 
+//////////TODO: fix error after last question is reached - must hide after last question///////////////////
+
+// Display a multiple choice question and display the answers as buttons
 function displayQuestion() {
+    // Create array variable and asign the answers array from the current question to it.
     var answersArray = questionsDB[currentQuestion].answers
+    // Remove any children that may be appended to the buttonDiv
+    // Will clear question and answers from the screen
     while (buttonDiv.firstChild) {
         buttonDiv.removeChild(buttonDiv.firstChild);
     };
+    // Get question from questions database and assign text to question element.
     question.textContent = questionsDB[currentQuestion].question
+    // Create buttons below the question that have the asnswers no them.
     for (var i = 0; i < answersArray.length; i++) {
+        // Create a button element and assign to button variable.
         var button = document.createElement("button")
+        // Create data-attribute `data-correct` which will assign true or false value to this answer's button. 
         button.setAttribute("data-correct", answersArray[i].correct)
+        // Assign answer text to button.
         button.textContent = answersArray[i].answer
+        // Add Bootstrap style to button
         button.classList.add("btn", "btn-primary")
+        // Append button to `buttonDiv`
         buttonDiv.appendChild(button)
+        // Repeat until all answer buttons are built.
     }
+    // Increment `currentQuestion` by one, so that the next question and set of answers in the 
+    // questions database will display once the correct (true) answer button is clicked.
+    currentQuestion++
 }
 
+// Initialize `secondsLeft` variable outside `coutdown()` so that it can be accessed by other functions.
+var secondsLeft = 30
+// Create countdown function to handle quiz timer.
 function countdown() {
-    var secondsLeft = 5;
     // Use the `setInterval()` method to call a function to be executed every 1000 milliseconds
     var timerInterval = setInterval(function () {
         // As long as the `secondsLeft` is greater than 1
         if (secondsLeft > 1) {
             // Set the `textContent` of `timerDiv` to show the remaining seconds
-            timerDiv.textContent = secondsLeft + ' seconds remaining';
+            timerDiv.textContent = secondsLeft + ' seconds remaining'
             // Decrement `secondsLeft` by 1
             secondsLeft--;
         } else if (secondsLeft === 1) {
             // When `secondsLeft` is equal to 1, rename to 'second' instead of 'seconds'
-            timerDiv.textContent = secondsLeft + ' second remaining';
+            timerDiv.textContent = secondsLeft + ' second remaining'
             secondsLeft--;
         } else {
             // Once `secondsLeft` gets to 0, set `timerDiv` to an empty string
-            timerDiv.textContent = '';
+            timerDiv.textContent = ''
             // Use `clearInterval()` to stop the timer
-            clearInterval(timerInterval);
+            clearInterval(timerInterval)
             // Call the `displayMessage()` function - display feedback
+            // Hide the question container
+            questionContainer.style.display = "none"
+            summary.style.display = "block"
         }
-    }, 1000);
+    }, 1000)
 }
 
+// Initialize ccumulator variable `points` to zero.
+var points = 0
+// Add event listener to the `buttonDiv` that holds the answer buttons.
+// If correct answer is clicked, question and answers will move to next question and answer
+// in the question database.
 buttonDiv.addEventListener("click", function (event) {
-
-    let correctAnswer = "You are correct!"
-    let incorrectAnswer = "Wrong!"
-    let feedback = document.getElementById("feedback")
     event.preventDefault()
+    // Assign strings to variables.
+    var correctAnswer = "Correct!"
+    var incorrectAnswer = "Wrong!"
+    // Assign feedback element to variable.
+    var feedback = document.getElementById("feedback")
+    // Test that event is being picked up.
     console.log("TEST", event.target)
-    let dataAttribute = event.target.getAttribute("data-correct")
+    // Assign `data-correct` boolean value to `dataAttribute` variable.
+    var dataAttribute = event.target.getAttribute("data-correct")
+    // Test to see if `dataAttribute` is a boolean, or a string (it is a string).
     console.log(typeof dataAttribute)
+    // Test `dataAttibute`. 
+    // if true, display `correctAnswer` string, and display next question. 
     if (dataAttribute === "true") {
-        feedback.textContent = correctAnswer + dataAttribute
+        points++
+        feedback.textContent = correctAnswer
+        displayQuestion()
     }
+    // if false, display `incorrectAnswer` string.
     else {
-        feedback.textContent = incorrectAnswer + dataAttribute
-    }
+        feedback.textContent = incorrectAnswer
+        // Subtract two seconds from timer.
+        secondsLeft = secondsLeft - 2
+        // Display next question.
+        displayQuestion()
+    } 
+    console.log("points: ", points)
 })
 
-// Timer
-// The timer starts at 10 seconds.
-// If user selects wrong answer, timer skips two seconds
+
 
 
 // write code for timer and score system
