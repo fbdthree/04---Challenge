@@ -8,16 +8,6 @@ var buttonDiv = document.getElementById("buttonDiv")
 var timerDiv = document.getElementById("timerDiv")
 var scoreContainer = document.getElementById("scoreContainer")
 
-//////////////////////Try putting text in dynamically/////////////////////
-
-// Create intoductory statement for the quiz.
-// Assign to `intro` variable.
-// var introParagraph = "Press start to play game.  Timer starts at 15 seconds.  Correct answers count as one point.  Incorrect answers subtract 2 seconds from timer.  Good luck!"
-// Assign the text in `introParagraph` to the intro element.
-// intro.textContent = introParagraph.
-//var introParagraph = "1) Press `Start` to start the timer.\n2) You have 15 seconds to answer all of the questions.\n3) Each correct answer scores one point.\n4) Each incorrect answer subtracts 2 seconds from timer\n5) Save your score at the end."  
-//intro.textContent = introParagraph
-
 // Hide the question container.
 questionContainer.style.display = "none"
 // Hide the summary section.
@@ -106,11 +96,11 @@ startBtn.addEventListener("click", function (event) {
     displayQuestion()
     // Start countdown timer.
     countdown()
+    // Hide the scoreContainer element.
     scoreContainer.style.display = "none"
+    // Hide the info element.
     intro.style.display = "none"
 })
-
-//////////TODO: fix error after last question is reached - must hide after last question///////////////////
 
 // Display a multiple choice question and display the answers as buttons
 function displayQuestion() {
@@ -218,8 +208,12 @@ buttonDiv.addEventListener("click", function (event) {
     console.log("points: ", points)
 })
 
-
-
+// Create event listener for `saveInitials` button.
+saveInitials.addEventListener("click", function(event) {
+    event.preventDefault()
+    let initials = document.getElementById("userInitials").value
+    localStorage.setItem(initials, points)
+})
 
 // write code for timer and score system
 // add more questions
