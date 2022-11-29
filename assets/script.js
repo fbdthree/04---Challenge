@@ -1,23 +1,26 @@
 // Assign elements to variables.
-// var intro = document.getElementById("intro")///////////////////////////
+var intro = document.getElementById("intro")
 var questionContainer = document.getElementById("quiz")
 var summary = document.getElementById("summary")
 var startBtn = document.getElementById("startbtn")
 var question = document.getElementById("question")
 var buttonDiv = document.getElementById("buttonDiv")
 var timerDiv = document.getElementById("timerDiv")
+var scoreContainer = document.getElementById("scoreContainer")
 
-//////////////////////Trying put text in dynamically/////////////////////
+//////////////////////Try putting text in dynamically/////////////////////
 
 // Create intoductory statement for the quiz.
 // Assign to `intro` variable.
 // var introParagraph = "Press start to play game.  Timer starts at 15 seconds.  Correct answers count as one point.  Incorrect answers subtract 2 seconds from timer.  Good luck!"
 // Assign the text in `introParagraph` to the intro element.
-// intro.textContent = introParagraph
+// intro.textContent = introParagraph.
+//var introParagraph = "1) Press `Start` to start the timer.\n2) You have 15 seconds to answer all of the questions.\n3) Each correct answer scores one point.\n4) Each incorrect answer subtracts 2 seconds from timer\n5) Save your score at the end."  
+//intro.textContent = introParagraph
 
-// Hide the question container
+// Hide the question container.
 questionContainer.style.display = "none"
-// Hide the summary section
+// Hide the summary section.
 summary.style.display = "none"
 
 // Declare current question being displays as 0, which will be used as the questionsDB's index.
@@ -103,12 +106,17 @@ startBtn.addEventListener("click", function (event) {
     displayQuestion()
     // Start countdown timer.
     countdown()
+    scoreContainer.style.display = "none"
+    intro.style.display = "none"
 })
 
 //////////TODO: fix error after last question is reached - must hide after last question///////////////////
 
 // Display a multiple choice question and display the answers as buttons
 function displayQuestion() {
+    if(currentQuestion >= questionsDB.length) {
+        return gameOver()
+    }
     // Create array variable and asign the answers array from the current question to it.
     var answersArray = questionsDB[currentQuestion].answers
     // Remove any children that may be appended to the buttonDiv
@@ -138,11 +146,12 @@ function displayQuestion() {
 }
 
 // Initialize `secondsLeft` variable outside `coutdown()` so that it can be accessed by other functions.
-var secondsLeft = 30
+var secondsLeft = 15
+var timerInterval
 // Create countdown function to handle quiz timer.
 function countdown() {
     // Use the `setInterval()` method to call a function to be executed every 1000 milliseconds
-    var timerInterval = setInterval(function () {
+    timerInterval = setInterval(function () {
         // As long as the `secondsLeft` is greater than 1
         if (secondsLeft > 1) {
             // Set the `textContent` of `timerDiv` to show the remaining seconds
@@ -154,16 +163,23 @@ function countdown() {
             timerDiv.textContent = secondsLeft + ' second remaining'
             secondsLeft--;
         } else {
-            // Once `secondsLeft` gets to 0, set `timerDiv` to an empty string
-            timerDiv.textContent = ''
-            // Use `clearInterval()` to stop the timer
-            clearInterval(timerInterval)
-            // Call the `displayMessage()` function - display feedback
             // Hide the question container
-            questionContainer.style.display = "none"
-            summary.style.display = "block"
+            gameOver()
         }
     }, 1000)
+}
+
+function gameOver() {
+    questionContainer.style.display = "none"
+    summary.style.display = "block"
+    // Once `secondsLeft` gets to 0, set `timerDiv` to an empty string
+    timerDiv.textContent = ''
+    // Use `clearInterval()` to stop the timer
+    clearInterval(timerInterval)
+    // Call the `displayMessage()` function - display feedback
+    var pointsDisplay = document.getElementById("score")
+    pointsDisplay.textContent = points
+    scoreContainer.style.display = "block"
 }
 
 // Initialize ccumulator variable `points` to zero.

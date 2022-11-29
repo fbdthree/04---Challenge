@@ -17,9 +17,15 @@
     </header>
     <main id="" class="container">
         <section id="intro">
-            <!--Add <p></p> here, with instruction for the quiz-->
+            <!--Add <p></p> here, with instruction for the quiz-->  
             <p>
-                Press start to play game.  Answer correctly, or lose.
+                <ol>
+                    <li>Press `Start` to start the timer.</li>
+                    <li>You have 15 seconds to answer all of the questions.</li>
+                    <li>Each correct answer scores one point.</li>
+                    <li>Each incorrect answer subtracts 2 seconds from timer</li>
+                    <li>Save your score at the end.</li>
+                </ol>
             </p>
             <button id="startbtn" class="btn btn-primary">Start</button>
         </section>
@@ -35,6 +41,9 @@
         <section id="summary">
             <input id="userInitials">
             <button id="saveInitials" class="btn btn-primary">Save Initials</button>
+        </section>
+        <section id="scoreContainer" style="display:none">
+            Your Final Score Is <span id="score"></span>
         </section>
     </main>
     <script src="./assets/script.js"></script>
